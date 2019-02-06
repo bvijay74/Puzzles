@@ -45,7 +45,7 @@ namespace SudokuAlgorithm {
     UShort Segment::GetCandidateCount(UShort num) const {
         UShort count = 0;
         
-        for (weak_ptr<Cell> cell : cells_) {
+        for (auto cell : cells_) {
             if (cell.lock()->GetMarking().IsMarked(num)) {
                 count++;
             }
@@ -73,7 +73,7 @@ namespace SudokuAlgorithm {
 			filled_ = true;
 		}
 
-		for (weak_ptr<Cell> cell : cells_) {
+		for (auto cell : cells_) {
 			if (cell.lock()->IsEmpty()) {
 				cell.lock()->GetMarking().Erase(number);
 			}
@@ -81,7 +81,7 @@ namespace SudokuAlgorithm {
 	}
 
 	// Find if the number is solved in the given segment
-	bool Segment::FindNumber(UShort number) {
+	bool Segment::FindNumber(UShort number) const {
 		return find_if(begin(cells_), end(cells_),
 					[number](const weak_ptr<Cell>& cell)
 						{ return number == cell.lock()->GetNumber(); }) != end(cells_);
@@ -89,7 +89,7 @@ namespace SudokuAlgorithm {
 
 	// Solve visible pairs, triples, quads etc.,
 	bool Segment::SolveVisibleSubsets() {
-		bool solved = false;
+		auto solved = false;
 
 		for (UShort i=0; i<GRID_WIDTH; i++) {
 			auto cell = cells_[i].lock();
@@ -114,7 +114,7 @@ namespace SudokuAlgorithm {
 			if (count > 1 && count == subset.GetCount()) {
 				// Set of candidate occurances match the number of candidates in the set
 				// So, the candiates in the set can be eliminated from other cells in the segment
-				for (UShort ti : target_indices) {
+				for (auto ti : target_indices) {
 					Marking& marking = cells_[ti].lock()->GetMarking();
 					if (marking.Erase(subset)) {
 						solved = true;
@@ -167,10 +167,10 @@ namespace SudokuAlgorithm {
 		}
 
 		// Elimnate the candidates which are already locked pairs, triples etc.,
-		for (UShort i=0; i<empty_cells.size()-1; i++) {
+		for (auto i=0; i<empty_cells.size()-1; i++) {
 			Marking m1 = empty_cells[i].lock()->GetMarking();
 			UShort count = 1;
-			for (UShort j=i+1; j<empty_cells.size(); j++) {
+			for (auto j=i+1; j<empty_cells.size(); j++) {
 				Marking m2 = empty_cells[j].lock()->GetMarking();
 				if (m1 == m2) {
 					count++;
@@ -185,13 +185,13 @@ namespace SudokuAlgorithm {
 			if (subset.GetCount() > least_marking) {
 				// The least occuring candidates could be distributed across cells and may not form hidden subset
 				// Find out if a set of candidates appear in multiple cells
-				for (UShort i=0; i<empty_cells.size()-1; i++) {
+				for (auto i=0; i<empty_cells.size()-1; i++) {
 					Marking s1 = subset.MatchSubset(empty_cells[i].lock()->GetMarking());
 					if (s1.GetCount() < 2) {
 						continue;
 					}
 					UShort count = 1;
-					for (UShort j=i+1; j<empty_cells.size(); j++) {
+					for (auto j=i+1; j<empty_cells.size(); j++) {
 						Marking s2 = subset.MatchSubset(empty_cells[j].lock()->GetMarking());
 						if (s1 == s2) {
 							count++;

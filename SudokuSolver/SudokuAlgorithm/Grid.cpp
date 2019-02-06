@@ -26,7 +26,7 @@ using namespace std;
 namespace SudokuAlgorithm {
     // Allocate the arrays and initialize the cross references
     void Grid::Initialize() {
-        for (size_t i=0; i<NUM_GRID_CELLS ;i++) {
+        for (auto i=0; i<NUM_GRID_CELLS ;i++) {
             cells_[i] = make_shared<Cell>();
         }
         
@@ -39,7 +39,7 @@ namespace SudokuAlgorithm {
         }
         
         // Initialize each row, column and block with their respective cells
-        for (shared_ptr<Cell> cell : cells_) {
+        for (auto cell : cells_) {
             Row& row = *rows_.at(cell->GetRow());
             row[cell->GetColumn()] = cell;
             
@@ -53,22 +53,22 @@ namespace SudokuAlgorithm {
         }
         
         // Initialize the rows<->columns cross references
-        for (shared_ptr<Row> row : rows_) {
-            for (shared_ptr<Column> column : columns_) {
+        for (auto row : rows_) {
+            for (auto column : columns_) {
                 row->AddColumnRef(column);
                 column->AddRowRef(row);
             }
         }
         
         // Initialize the blocks<->rows and blocks<->columns cross references
-        for (shared_ptr<Block> block : blocks_) {
-            for (shared_ptr<Row> row : rows_) {
+        for (auto block : blocks_) {
+            for (auto row : rows_) {
                 if (block->GetIndex()/BLOCK_WIDTH == row->GetIndex()/BLOCK_WIDTH) {
                     block->AddRowRef(row);
                     row->AddBlockRef(block);
                 }
             }
-            for (shared_ptr<Column> column : columns_) {
+            for (auto column : columns_) {
                 if (block->GetIndex()%BLOCK_WIDTH == column->GetIndex()/BLOCK_WIDTH) {
                     block->AddColumnRef(column);
                     column->AddBlockRef(block);
@@ -88,10 +88,10 @@ namespace SudokuAlgorithm {
     }
     
     // Display the numbers in the grid
-    void Grid::DisplayGrid() {
+    void Grid::DisplayGrid() const {
         auto row_separator = " ----- ----- ----- \n";
         
-        for (shared_ptr<Cell> cell : cells_) {
+        for (auto cell : cells_) {
             if (cell->GetColumn() == 0 &&
                 cell->GetRow() % 3 == 0) {
                     cout << row_separator;
@@ -144,17 +144,17 @@ namespace SudokuAlgorithm {
         }
 
 		// Create the list of segments not filled
-        for (shared_ptr<Segment> seg : rows_) {
+        for (auto seg : rows_) {
             if (!seg->IsFilled()) {
                 unfilled_segs.push_back(seg);
             }
         }
-        for (shared_ptr<Segment> seg : columns_) {
+        for (auto seg : columns_) {
             if (!seg->IsFilled()) {
                 unfilled_segs.push_back(seg);
             }
         }
-        for (shared_ptr<Segment> seg : blocks_) {
+        for (auto seg : blocks_) {
             if (!seg->IsFilled()) {
                 unfilled_segs.push_back(seg);
             }
@@ -169,7 +169,7 @@ namespace SudokuAlgorithm {
 
 			auto solved = false;
 			// Solve visible and hidden singles first
-			for (shared_ptr<Segment> seg : unfilled_segs) {
+			for (auto seg : unfilled_segs) {
 				if (seg->SolveSingles()) {
 					solved = true;
 				}
@@ -180,19 +180,19 @@ namespace SudokuAlgorithm {
 			}
 
 			// Solve intersections, visible subsets and hidden subsets
-			for (shared_ptr<Segment> seg : unfilled_segs) {
+			for (auto seg : unfilled_segs) {
 				if (seg->SolveIntersections()) {
 					solved = true;
 				}
 			}
 
-			for (shared_ptr<Segment> seg : unfilled_segs) {
+			for (auto seg : unfilled_segs) {
 				if (seg->SolveVisibleSubsets()) {
 					solved = true;
 				}
 			}
 		
-			for (shared_ptr<Segment> seg : unfilled_segs) {
+			for (auto seg : unfilled_segs) {
 				if (seg->SolveHiddenSubsets()) {
 					solved = true;
 				}

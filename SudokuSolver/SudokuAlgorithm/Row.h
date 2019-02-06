@@ -28,10 +28,12 @@
 
 namespace SudokuAlgorithm {
 	// Row in a Sudoku puzzle grid
-    class Row : public Segment {
+    class Row final : public Segment {
     public:
         Row(UShort index) : Segment(index) {
         }
+        
+        ~Row() = default;
         
 		// Add reference to an intersecting column
         void AddColumnRef(const std::shared_ptr<Segment>& column) {
@@ -48,11 +50,11 @@ namespace SudokuAlgorithm {
         }
         
 		// Prepare the row for the solution
-		virtual void Initialize();
+		virtual void Initialize() override;
 		// Solve visible and hidden singles
-		virtual bool SolveSingles();
+		virtual bool SolveSingles() override;
 		// Solve intersections or pointing pairs
-		virtual bool SolveIntersections();
+		virtual bool SolveIntersections() override;
 
     private:
 		// References to the columns and blocks that the row intersects

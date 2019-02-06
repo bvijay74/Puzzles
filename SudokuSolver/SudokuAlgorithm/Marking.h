@@ -23,10 +23,9 @@
 #include "SudokuAlgorithm.h"
 
 namespace SudokuAlgorithm {
-    class Marking {
+    class Marking final {
     public:
-        Marking() {
-            candidates_.numbers_ = 0;
+        Marking() : candidates_{0} {
         }
         
 		Marking(UShort n) {
@@ -36,7 +35,9 @@ namespace SudokuAlgorithm {
 		Marking(const Marking& m) {
 			candidates_.numbers_ = m.candidates_.numbers_;
 		}
-
+        
+        ~Marking() = default;
+        
         void operator= (const Marking& m) {
             candidates_.numbers_ = m.candidates_.numbers_;
         }
@@ -82,7 +83,7 @@ namespace SudokuAlgorithm {
 		}
 
 		// Count the number of candidates
-        UShort GetCount();
+        UShort GetCount() const;
 		// Erase the candidates based on the given subset
         bool Erase(const Marking& subset);
 		// Return the number if only one candidate is present

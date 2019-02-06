@@ -27,8 +27,8 @@ namespace SudokuAlgorithm {
 		Segment::Initialize();
 
 		// Mark the candidates based on the numbers present in the intersecting rows and columns
-		for (UShort n : unsolved_nums_) {
-			for (UShort i=0; i<cells_.size(); i++) {
+		for (auto n : unsolved_nums_) {
+			for (auto i=0U; i<cells_.size(); i++) {
 				auto cell = cells_[i].lock();
 				if (cell->IsEmpty()) {
 					if (!row_refs_[i/row_refs_.size()].lock()->FindNumber(n) &&
@@ -42,11 +42,11 @@ namespace SudokuAlgorithm {
 
 	// Solve visible and hidden singles
 	bool Block::SolveSingles() {
-		bool solved = false;
+		auto solved = false;
 
-		for (UShort i=0; i<cells_.size(); i++) {
+		for (auto i=0; i<cells_.size(); i++) {
 			auto cell = cells_[i].lock();
-			Marking& marking = cell->GetMarking();
+			auto marking = cell->GetMarking();
 			UShort n;
 
 			// Update solved number to the cell if only one candidate is marked for the cell
@@ -63,12 +63,12 @@ namespace SudokuAlgorithm {
 
 		vector<UShort> nums(unsolved_nums_);
 		// Solve hidden single
-		for (UShort n : nums) {
+		for (auto n : nums) {
 			UShort mark_index = 0;
 			UShort mark_count = 0;
 
 			// Count the candidate's occurances in the block
-			for (UShort i=0; i<cells_.size(); i++) {
+			for (auto i=0; i<cells_.size(); i++) {
 				auto cell = cells_[i].lock();
 				if (cell->IsEmpty()) {
 					if (cell->GetMarking().IsMarked(n)) {
@@ -98,13 +98,13 @@ namespace SudokuAlgorithm {
     
 	// Solve intersections or pointing pairs
 	bool Block::SolveIntersections() {
-		bool solved = false;
+		auto solved = false;
 
-		for (UShort n : unsolved_nums_) {
+		for (auto n : unsolved_nums_) {
 			if (GetCandidateCount(n) > 2) {
 				UShort num_count = 0;
 				auto aligned_row = -1;
-				for (UShort i=0; i<cells_.size(); i++) {
+				for (auto i=0; i<cells_.size(); i++) {
 					auto cell = cells_[i].lock();
 					if (cell->IsEmpty() && cell->GetMarking().IsMarked(n)) {
 						num_count++;
@@ -123,7 +123,7 @@ namespace SudokuAlgorithm {
 				if (aligned_row >= 0) {
 					// Erase the candidate occurances in the block,
 					// where the rows have the candidate occurances outside the block
-					for (UShort i=0; i<cells_.size(); i++) {
+					for (auto i=0; i<cells_.size(); i++) {
 						if (i / BLOCK_WIDTH != aligned_row) {
 							auto cell = cells_[i].lock();
 							Marking& marking = cell->GetMarking();
@@ -140,7 +140,7 @@ namespace SudokuAlgorithm {
 				// solve column intersections in the block if row intersections are not solved
 				array<UShort, BLOCK_WIDTH> num_counts = { 0 };
 
-				for (UShort i=0; i<cells_.size(); i++) {
+				for (auto i=0; i<cells_.size(); i++) {
 					auto cell = cells_[i].lock();
 					if (cell->IsEmpty() && cell->GetMarking().IsMarked(n)) {
 						num_counts[i%BLOCK_WIDTH]++;
@@ -148,7 +148,7 @@ namespace SudokuAlgorithm {
 				}
 
 				auto aligned_column = -1;
-				for (UShort column=0; column<BLOCK_WIDTH; column++) {
+				for (auto column=0; column<BLOCK_WIDTH; column++) {
 					// Find the column intersecting the block in which the candidate is aligned
 					// The column does not have any occurance of the candidate apart from those aligned to this block
 					if (num_counts[column] > 1 &&
@@ -161,7 +161,7 @@ namespace SudokuAlgorithm {
 				if (aligned_column >= 0) {
 					// Erase the candidate occurances in the block,
 					// where the columns have the candidate occurances outside the block
-					for (UShort i=0; i<cells_.size(); i++) {
+					for (auto i=0; i<cells_.size(); i++) {
 						if (i % BLOCK_WIDTH != aligned_column) {
 							auto cell = cells_[i].lock();
 							Marking& marking = cell->GetMarking();

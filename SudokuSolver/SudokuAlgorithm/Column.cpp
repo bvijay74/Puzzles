@@ -27,8 +27,8 @@ namespace SudokuAlgorithm {
 		Segment::Initialize();
 
 		// Mark the candidates based on the numbers present in the intersecting rows and blocks
-		for (UShort n : unsolved_nums_) {
-			for (UShort row=0; row<cells_.size(); row++) {
+		for (auto n : unsolved_nums_) {
+			for (auto row=0; row<cells_.size(); row++) {
 				auto cell = cells_[row].lock();
 				if (cell->IsEmpty()) {
 					if (!row_refs_[row].lock()->FindNumber(n) &&
@@ -44,7 +44,7 @@ namespace SudokuAlgorithm {
 	bool Column::SolveSingles() {
 		bool solved = false;
 
-		for (UShort row=0; row<cells_.size(); row++) {
+		for (auto row=0; row<cells_.size(); row++) {
 			auto cell = cells_[row].lock();
 			Marking& marking = cell->GetMarking();
 			UShort n;
@@ -64,12 +64,12 @@ namespace SudokuAlgorithm {
 
 		vector<UShort> nums(unsolved_nums_);
 		// Solve hidden single
-		for (UShort n : nums) {
+		for (auto n : nums) {
 			UShort mark_row = 0;
 			UShort mark_count = 0;
 
 			// Count the candidate's occurances in the column
-			for (UShort row = 0; row < cells_.size(); row++) {
+			for (auto row = 0; row < cells_.size(); row++) {
 				auto cell = cells_[row].lock();
 				if (cell->IsEmpty()) {
 					if (cell->GetMarking().IsMarked(n)) {
@@ -101,11 +101,11 @@ namespace SudokuAlgorithm {
     bool Column::SolveIntersections() {
 		bool solved = false;
 
-		for (UShort n : unsolved_nums_) {
+		for (auto n : unsolved_nums_) {
 			if (GetCandidateCount(n) > 2) {
 				UShort num_count = 0;
 				auto aligned_block = -1;
-				for (UShort row = 0; row < cells_.size(); row++) {
+				for (auto row = 0; row < cells_.size(); row++) {
 					auto cell = cells_[row].lock();
 					if (cell->IsEmpty() && cell->GetMarking().IsMarked(n)) {
 						num_count++;
@@ -123,7 +123,7 @@ namespace SudokuAlgorithm {
 
 				if (aligned_block >= 0) {
 					// Erase the candidate occurances in the column which are not aligned in a block
-					for (UShort row = 0; row<cells_.size(); row++) {
+					for (auto row = 0; row<cells_.size(); row++) {
 						if (row / BLOCK_WIDTH != aligned_block) {
 							auto cell = cells_[row].lock();
 							Marking& marking = cell->GetMarking();

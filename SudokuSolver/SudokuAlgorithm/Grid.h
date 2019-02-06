@@ -30,16 +30,16 @@
 #include "Block.h"
 
 namespace SudokuAlgorithm {
-    class Grid {
+    class Grid final {
     public:
-        Grid() : cells_() {
+        Grid() : cells_{} {
             Initialize();
         }
         
         ~Grid() = default;
         
 		// Get the number in the given cell addressed by its row and column
-		UShort GetCellNumber(UShort row, UShort column) {
+		UShort GetCellNumber(UShort row, UShort column) const {
 			if (row >= GRID_WIDTH || column >= GRID_WIDTH) {
 				throw std::out_of_range("Grid:: GetCellNumber");
 			}
@@ -51,7 +51,7 @@ namespace SudokuAlgorithm {
         void UpdateCell(UShort row, UShort column, UShort num);
         
         // Display the numbers in the grid
-        void DisplayGrid();
+        void DisplayGrid() const;
         
         // Solve the puzzle
         bool Solve();

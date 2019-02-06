@@ -21,7 +21,7 @@
 
 namespace SudokuAlgorithm {
 	// Count the number of candidates
-    UShort Marking::GetCount() {
+    UShort Marking::GetCount() const {
         UShort count = 0;
         
         for (UShort n=0; n<NUM_BASE; n++) {

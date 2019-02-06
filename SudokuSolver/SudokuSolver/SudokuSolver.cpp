@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
 
 // Parse the row numbers of the grid from the input string
 void ParseRow(const string& rowStr, vector<UShort>& rowNums) {
-	for (char c : rowStr) {
+	for (auto c : rowStr) {
 		if (isdigit(c)) {
 			rowNums.push_back(c - '0');
 		}

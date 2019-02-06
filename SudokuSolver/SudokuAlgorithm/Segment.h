@@ -34,6 +34,11 @@ namespace SudokuAlgorithm {
         Segment(UShort index)  : index_(index), filled_(false) {
         }
         
+        Segment() = delete;
+        Segment(const Segment&) = delete;
+        
+        ~Segment() = default;
+        
         UShort GetIndex() const {
             return index_;
         }
@@ -54,7 +59,7 @@ namespace SudokuAlgorithm {
 		// Update the solved number in the segment and its cell markings
         void UpdateSolvedNumber(UShort number);
 		// Find if the number is solved in the given segment
-        bool FindNumber(UShort number);
+        bool FindNumber(UShort number) const;
 
 		// Solve visible pairs, triples, quads etc.,
         bool SolveVisibleSubsets();

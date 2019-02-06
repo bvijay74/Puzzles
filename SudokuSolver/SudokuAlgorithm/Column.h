@@ -28,7 +28,7 @@
 
 namespace SudokuAlgorithm {
 	// Column in a Sudoku puzzle grid
-    class Column : public Segment {
+    class Column final : public Segment {
     public:
         Column(UShort index) : Segment(index) {
         }
@@ -48,11 +48,11 @@ namespace SudokuAlgorithm {
         }
         
 		// Prepare the column for the solution
-		virtual void Initialize();
+		virtual void Initialize() override;
 		// Solve visible and hidden singles
-		virtual bool SolveSingles();
+		virtual bool SolveSingles() override;
 		// Solve intersections or pointing pairs
-		virtual bool SolveIntersections();
+		virtual bool SolveIntersections() override;
 
     private:
 		// References to the rows and blocks that the column intersects

@@ -25,7 +25,7 @@
 
 namespace SudokuAlgorithm {
 	// Defines the cell in the Sudoku puzzle grid
-    class Cell {
+    class Cell final {
     public:
         Cell();
         Cell(const Cell&) = delete; // cell cannot be copied
